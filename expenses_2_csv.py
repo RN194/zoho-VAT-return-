@@ -44,6 +44,7 @@ def data_extraction(start, end, data):
 
     row_details = [vendor_name, acc_name, tax_percentage, subtotal, tax_amount, total]
     fname = start + "-" + end +"_expenses_Charlesford_VAT.csv"
+    g_expenses_filename = fname
     with open(fname, "a+") as out_file:
         writer = csv.writer(out_file)
         writer.writerow(row_details)
