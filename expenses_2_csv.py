@@ -10,7 +10,7 @@ id_list = []
 
 def get_expenses(start, end, auth): 
     token = "Zoho-oauthtoken " + auth
- 
+
     getter = requests.get("https://books.zoho.eu/api/v3/expenses", headers={'Authorization': token})
 
     j_data = json.loads(getter.content)['expenses']
