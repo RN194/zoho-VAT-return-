@@ -8,6 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 import logins
+import os.path
 
 refresh_link = "https://accounts.zoho.eu/oauth/v2/token?refresh_token=" + logins.r_token + "&client_id=" + logins.c_id + "&client_secret=" + logins.c_secret + "&redirect_uri=http://localhost&grant_type=refresh_token"
 
@@ -69,7 +70,7 @@ def get_by_id(start, end, auth):
         data_from = json.loads(sender.content)
         data_extraction(start, end, data_from)
 
- main() 
+
 def data_extraction(start, end, json_data):
     j_data = json_data['invoice']
     invoice_number = j_data['invoice_number']
@@ -83,10 +84,15 @@ def data_extraction(start, end, json_data):
     subtotal = j_data['sub_total']
     tax_total = j_data['tax_total']
     total = j_data['total']
-
     # list to write to csv
+    header = ["invoice_number", "date", "name", "status", "description", "quantity", "ppu", "subtotal", "vat", "tax_total", "total"]
     row_details = [invoice_number, date, name, status, description, quantity, ppu, subtotal, vat, tax_total, total]
-    fname = start + "-" + end + "invoices" + logins.company_name + "_VAT.csv"
+    fname = start + "-" + end + "_invoices_" + logins.company_name + "_VAT.csv"
+    if not os.path.exists(fname):
+        with open(fname, "a+") as out_file:
+            writer = csv.writer(out_file)
+            writer.writerow(header)
+            out_file.close()
     with open(fname, "a+") as out_file:
         writer = csv.writer(out_file)
         writer.writerow(row_details)
@@ -103,7 +109,7 @@ def main():
     get_mappings(start, end, auth_token)
     get_by_id(start, end, auth_token)
 
-    exp = input("Finally, would you like to run the expenses report as well? y or n")
+    exp = input("Finally, would you like to run the expenses report as well? y or n: ")
     if exp == "y":
         expenses_2_csv.caller(start, end, auth_token)
     else:

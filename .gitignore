@@ -1,1 +1,3 @@
 logins.py
+*.csv
+__pycache__

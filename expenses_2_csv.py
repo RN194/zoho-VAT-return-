@@ -2,6 +2,8 @@ import sys
 import csv
 import requests
 import json
+import logins
+import os.path
 
 refresh_link = "https://accounts.zoho.eu/oauth/v2/token?refresh_token=[ADD REFRESH TOKEN HERE]&client_id=[ADD CLIENT ID HERE]&client_secret=[ADD CLIENT SECRET HERE]&redirect_uri=http://localhost&grant_type=refresh_token"
 
@@ -42,9 +44,16 @@ def data_extraction(start, end, data):
     subtotal = j_data['line_items'][0]['item_total']
     total = tax_amount + subtotal
 
+    header = ["vendor name", "account name", "tax rate", "subtotal", "tax amount", "total"]
     row_details = [vendor_name, acc_name, tax_percentage, subtotal, tax_amount, total]
-    fname = start + "-" + end +"_expenses_Charlesford_VAT.csv"
+    fname = start + "-" + end +"_expenses_"+ logins.company_name +"_VAT.csv"
     g_expenses_filename = fname
+    if not os.path.exists(fname):
+        with open(fname, "a+") as out_file:
+            writer = csv.writer(out_file)
+            writer.writerow(header)
+            out_file.close()
+
     with open(fname, "a+") as out_file:
         writer = csv.writer(out_file)
         writer.writerow(row_details)
