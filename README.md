@@ -1,6 +1,9 @@
 # zoho-VAT-return-
 This is a program that allows the user to use Zoho's REST API to scrape their invoice and purchase data for VAT return filing.
 
+## Update end 2024
+This repo no longer works due to Zoho updating their API to a new version. I will rewrite at some stage in the future.
+
 #### USAGE
 First, you need to create a file named `logins.py` in the same folder as the other files.
 This file must contain the following:
